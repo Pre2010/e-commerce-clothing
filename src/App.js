@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import ShopPage from './pages/ShopPage/shopPage';
 import Header from './components/header/header';
 import SignInAndSignUpPage from './pages/signIn-signUp/signIn-signUpPage';
-import {auth} from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 class App extends Component {
   constructor() {
@@ -20,9 +20,28 @@ class App extends Component {
 
   componentDidMount() {
     // subscription 
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({currentUser: user});
-      console.log(user);
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      // checks if a user is signing in and if there is a userAuth
+      if (userAuth) {
+        
+        // gets the userRef from the DB
+        const userRef = await createUserProfileDocument(userAuth);
+
+        // we subscribe and listen to any changes made to the userRef data,
+        // we also get the first state of the userRef data, snapShot.
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+        })
+      } else {
+        // setting the currentUser state to null on log out or if userAuth is false
+        this.setState({currentUser: userAuth});
+      }
+
     })
   }
 
