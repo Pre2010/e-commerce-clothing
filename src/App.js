@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
 import './App.css';
 import HomePage from './pages/HomePage/homePage';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import ShopPage from './pages/ShopPage/shopPage';
 import Header from './components/header/header';
 import SignInAndSignUpPage from './pages/signIn-signUp/signIn-signUpPage';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import {connect} from 'react-redux';
+import {setCurrentUser} from './redux/user/user.actions';
+import {selectCurrentUser} from './redux/user/user.selectors';
+import {createStructuredSelector} from 'reselect';
+import CheckoutPage from './pages/CheckOutPage/checkoutPage';
 
 class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      currentUser: null
-    }
-  }
-
   unsubscribeFromAuth = null;
 
   componentDidMount() {
+    const {setCurrentUser} = this.props;
     // subscription 
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // checks if a user is signing in and if there is a userAuth
@@ -30,16 +28,14 @@ class App extends Component {
         // we subscribe and listen to any changes made to the userRef data,
         // we also get the first state of the userRef data, snapShot.
         userRef.onSnapshot(snapShot => {
-          this.setState({
-            currentUser: {
+          setCurrentUser({
               id: snapShot.id,
               ...snapShot.data()
-            }
-          });
+            });
         })
       } else {
         // setting the currentUser state to null on log out or if userAuth is false
-        this.setState({currentUser: userAuth});
+        setCurrentUser(userAuth);
       }
 
     })
@@ -49,19 +45,39 @@ class App extends Component {
     this.unsubscribeFromAuth();
   }
 
-
-  render() {  
+  render() {
+    const {currentUser} = this.props;  
     return (
       <div>
-      <Header currentUser={this.state.currentUser} />
+      <Header />
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route path='/shop' component={ShopPage} />
-          <Route path='/signIn' component={SignInAndSignUpPage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
+          <Route 
+            exact 
+            path='/signIn' 
+            render={() => currentUser ? (
+              <Redirect to='/' />
+              ) : (
+                <SignInAndSignUpPage />
+              )
+            } 
+          />
         </Switch>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
+})
+
+// returns an object where the prop name is what we want to pass in that dispatches the
+// new action that we are trying to pass, which is setCurrentUser
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
