@@ -34,7 +34,7 @@ const mapStateToProps = createStructuredSelector({
     cartItems: selectCartItems
 });
 
-// this gets evaluated from inside out. we run connect first than withRouter.
+// this gets evaluated from inside out. we run connect first then withRouter.
 // if we don't give connect a second argument, which is for mapDispatchToProps,
 // we can do the short hand way of passing dispatch as a destructured prop of this component.
 // then call dispatch() on any event, in this case <CustomButton onClick()

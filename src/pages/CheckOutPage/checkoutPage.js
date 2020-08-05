@@ -1,47 +1,48 @@
 import React from 'react';
-import './checkoutPage.scss';
 import {connect} from 'react-redux';
 import {createStructuredSelector} from 'reselect';
 import {selectCartItems, selectCartTotal} from '../../redux/cart/cart.selectors';
 import CheckoutItem from '../../components/checkout/checkout-item/checkout-item';
-import StripeCheckoutButton from '../../components/stripe/stripe-button/stripe-button';
+import {
+    CheckoutPageContainer,
+    CheckoutHeaderContainer,
+    HeaderBlockContainer,
+    TotalContainer,
+    TestWarningContainer,
+    StripeCheckoutButtonStyles
+} from './checkoutPage.styles';
+
+const headerArr = ['Product', 'Description', 'Quantity', 'Price', 'Remove'];
 
 const CheckoutPage = ({cartItems, cartTotal}) => {
     return (
-        <div className='checkout-page'>
-            <div className='checkout-header'>
-                <div className='header-block'>
-                    <span>Product</span>
-                </div>
-                <div className='header-block'>
-                    <span>Description</span>
-                </div>
-                <div className='header-block'>
-                    <span>Quantity</span>
-                </div>
-                <div className='header-block'>
-                    <span>Price</span>
-                </div>
-                <div className='header-block'>
-                    <span>Remove</span>
-                </div>
-            </div>
+        <CheckoutPageContainer>
+            <CheckoutHeaderContainer>
+                {
+                    headerArr.map(item => (
+                        <HeaderBlockContainer key={item}>
+                            <span>{item}</span>
+                        </HeaderBlockContainer>
+                        )
+                    )
+                }
+            </CheckoutHeaderContainer>
             {
                 cartItems.map(cartItem => (
                     <CheckoutItem key={cartItem.id} cartItem={cartItem}/>
                     )
                 )
             }
-            <div className='total'>
+            <TotalContainer>
                 <span>TOTAL: ${cartTotal}</span>
-            </div>
-            <div className='test-warning'>
+            </TotalContainer>
+            <TestWarningContainer>
                 *Please use the following test credit card for payments*
                 <br />
                 4242 4242 4242 4242 - Exp: 01/21 - CVW: 123
-            </div>
-            <StripeCheckoutButton price={cartTotal} />
-        </div>
+            </TestWarningContainer>
+            <StripeCheckoutButtonStyles price={cartTotal} />
+        </CheckoutPageContainer>
     )
 }
 
