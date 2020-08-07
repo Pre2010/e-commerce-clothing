@@ -11,6 +11,11 @@ export const TitleContainer = styled.h1`
     margin: 0 auto 25px;
     background-color: white;
     opacity: .9;
+    cursor: pointer;
+
+    &:hover {
+        color: gray;
+    }
 `;
 
 export const PreviewContainer = styled.div`
