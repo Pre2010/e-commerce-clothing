@@ -33,12 +33,10 @@ class App extends Component {
               ...snapShot.data()
             });
         })
-      } else {
+      }
         // setting the currentUser state to null on log out or if userAuth is false
         setCurrentUser(userAuth);
-      }
-
-    })
+    });
   }
 
   componentWillUnmount() {

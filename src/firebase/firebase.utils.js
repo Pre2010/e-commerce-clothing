@@ -41,7 +41,48 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     }
 
     return userRef;
-}
+};
+
+// automatically add data from our data files to Firestore.
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = firestore.collection(collectionKey);
+
+    const batch = firestore.batch();
+    objectsToAdd.forEach(obj => {
+        const newDocRef = collectionRef.doc();
+        batch.set(newDocRef, obj);
+    });
+    return await batch.commit();
+};
+
+// grabbing the entire collection and converting it into an object instead of the array that we would receive. 
+// so that our front-end can use the data from the back-end.
+export const convertCollectionsSnapshotToMap = (collections) => {
+    // .docs will gives us our QuerySnapshot array,
+    // which we will then .map over
+    const transformedCollection = collections.docs.map(doc => {
+        // we pull the title and items from the doc.data()
+        const {title, items} = doc.data();
+
+        // we then return an object that represents the data we want for our front-end.
+        return {
+            // we use encodeURI and pass it the title from doc.data
+            // so that we can create our routeName that our front-end can use
+            routeName: encodeURI(title.toLowerCase()),
+            // the id belongs to the doc Snapshot object
+            id: doc.id,
+            title,
+            items
+        }
+    });
+
+    // this will reduce the array into an object for our reducer to use. the initial accumulator value is an empty object {}.
+    return transformedCollection.reduce((accumulator, collection) => {
+        // key = accumulator[collection.title.toLowerCase()], value = collection
+        accumulator[collection.title.toLowerCase()] = collection;
+        return accumulator;
+    }, {})
+};
 
 
 firebase.initializeApp(config);
