@@ -20,3 +20,14 @@ export const selectCollection = collectionUrlParam => (
         collections => (collections ? collections[collectionUrlParam] : null)
     )
 );
+
+export const selectIsCollectionFetching = createSelector(
+    [selectShop],
+    shop => shop.isFetching
+);
+
+export const selectIsCollectionsLoaded = createSelector(
+    [selectShop],
+    // '!!' AKA 'double bang'. Helps with converting a value into a truthy or falsey value
+    shop => !!shop.collections
+)
