@@ -5,9 +5,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import ShopPage from './pages/ShopPage/shopPage';
 import Header from './components/header/header';
 import SignInAndSignUpPage from './pages/signIn-signUp/signIn-signUpPage';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import {connect} from 'react-redux';
-import {setCurrentUser} from './redux/user/user.actions';
 import {selectCurrentUser} from './redux/user/user.selectors';
 import {createStructuredSelector} from 'reselect';
 import CheckoutPage from './pages/CheckOutPage/checkoutPage';
@@ -16,27 +14,26 @@ class App extends Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const {setCurrentUser} = this.props;
     // subscription 
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      // checks if a user is signing in and if there is a userAuth
-      if (userAuth) {
+    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+    //   // checks if a user is signing in and if there is a userAuth
+    //   if (userAuth) {
         
-        // gets the userRef from the DB
-        const userRef = await createUserProfileDocument(userAuth);
+    //     // gets the userRef from the DB
+    //     const userRef = await createUserProfileDocument(userAuth);
 
-        // we subscribe and listen to any changes made to the userRef data,
-        // we also get the first state of the userRef data, snapShot.
-        userRef.onSnapshot(snapShot => {
-          setCurrentUser({
-              id: snapShot.id,
-              ...snapShot.data()
-            });
-        })
-      }
-        // setting the currentUser state to null on log out or if userAuth is false
-        setCurrentUser(userAuth);
-    });
+    //     // we subscribe and listen to any changes made to the userRef data,
+    //     // we also get the first state of the userRef data, snapShot.
+    //     userRef.onSnapshot(snapShot => {
+    //       setCurrentUser({
+    //           id: snapShot.id,
+    //           ...snapShot.data()
+    //         });
+    //     })
+    //   }
+    //     // setting the currentUser state to null on log out or if userAuth is false
+    //     setCurrentUser(userAuth);
+    // });
   }
 
   componentWillUnmount() {
@@ -74,8 +71,8 @@ const mapStateToProps = createStructuredSelector({
 
 // returns an object where the prop name is what we want to pass in that dispatches the
 // new action that we are trying to pass, which is setCurrentUser
-const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
-})
+// const mapDispatchToProps = dispatch => ({
+//   setCurrentUser: user => dispatch(setCurrentUser(user))
+// })
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps)(App);
