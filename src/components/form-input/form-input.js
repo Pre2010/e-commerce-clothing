@@ -11,7 +11,7 @@ const FormInput = ({handleOnChange, label, ...otherProps}) => {
             <FormInputContainer onChange={handleOnChange} {...otherProps} />
             {
                 label ? 
-                (<FormInputLabelContainer>
+                (<FormInputLabelContainer className={otherProps.value.length ? 'shrink' : ''}>
                     {label}
                 </FormInputLabelContainer>)
                 : null

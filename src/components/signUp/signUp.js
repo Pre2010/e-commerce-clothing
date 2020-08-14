@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import {SingUpContainer, TitleContainer} from './signUp.styles.js';
-import {auth, createUserProfileDocument} from '../../firebase/firebase.utils';
+import {SignUpContainer, TitleContainer} from './signUp.styles.js';
 import FormInput from '../form-input/form-input';
 import CustomButton from '../custom-button/custom-button';
+import {connect} from 'react-redux';
+import {signUpStart} from '../../redux/user/user.actions';
 
 
 class SignUp extends Component {
@@ -21,6 +22,7 @@ class SignUp extends Component {
         // prevents the form's default submit event
         event.preventDefault();
 
+        const {signUpStart} = this.props;
         const {displayName, email, password, confirmPassword} = this.state;
 
         if (password !== confirmPassword) {
@@ -28,23 +30,7 @@ class SignUp extends Component {
             return;
         }
 
-        try {
-            // we create a new user with the destructured email and password with the values we get from the form.
-            const {user} = await auth.createUserWithEmailAndPassword(email, password);
-
-            // we create a new entry in our DB for the user with their displayName
-            await createUserProfileDocument(user, {displayName});
-
-            // this will clear our form after successfully creating a user.
-            this.setState({
-                displayName: '',
-                email: '',
-                password: '',
-                confirmPassword: ''
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        signUpStart({displayName, email, password});
     };
 
     handleOnChange = event => {
@@ -56,7 +42,7 @@ class SignUp extends Component {
     render() {
         const {displayName, email, password, confirmPassword} = this.state;
         return (
-            <SingUpContainer>
+            <SignUpContainer>
                 <TitleContainer>I do not have an account</TitleContainer>
                 <span>Sign up with your email and password</span>
                 <form onSubmit={this.handleOnSubmit}>
@@ -94,9 +80,14 @@ class SignUp extends Component {
 
                         <CustomButton type='submit'>SIGN UP</CustomButton>
                 </form>
-            </SingUpContainer>
+            </SignUpContainer>
         )
     }
-}
+};
 
-export default SignUp;
+const mapDispatchToProps = dispatch => ({
+    // we pass our userCredentials to our dispatch which will pass it along to our saga listening for this action.
+    signUpStart: userCredentials => dispatch(signUpStart(userCredentials))
+});
+
+export default connect(null, mapDispatchToProps)(SignUp);

@@ -13,7 +13,7 @@ export const HeaderContainer = styled.div`
     display: flex;
     justify-content: space-between;
     margin-bottom: 25px;
-    background-color: white;
+    ${'' /* background-color: white; */}
 `;
 
 export const LogoContainer = styled(Link)`

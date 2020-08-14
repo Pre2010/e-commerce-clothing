@@ -15,9 +15,8 @@ const ItemCollection = ({item, addCartItem}) => {
     return (
         <ItemCollectionContainer>
             <ImageContainer
-                style={{
-                    backgroundImage: `url(${imageUrl})`
-                }} 
+                className='image'
+                imageUrl={imageUrl}
             />
             <CollectionFooterContainer>
                 <NameContainer>{name}</NameContainer>

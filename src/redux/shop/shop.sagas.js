@@ -1,4 +1,4 @@
-import {takeEvery, call, put} from 'redux-saga/effects';
+import {takeEvery, call, all, put} from 'redux-saga/effects';
 import ShopActionTypes from './shop.types';
 import {firestore, convertCollectionsSnapshotToMap} from '../../firebase/firebase.utils';
 import {
@@ -6,6 +6,7 @@ import {
     fetchCollectionsFailure
 } from './shop.actions';
 
+// Get the collection of items from the backend
 export function* fetchCollectionsAsync() {
     yield console.log('object');
 
@@ -26,9 +27,11 @@ export function* fetchCollectionsAsync() {
 
     /*
         Saga way (above):
+
         collectionRef, snapshot, collectionsMap, and the puts above does the same as below but as a Saga.
 
         Thunk way (below):
+        
         whenever the collectionRef changes or when this is ran for the first time,
         we will get a snapshot of the code of our collections object array at the time 
         this code renders.
@@ -46,4 +49,10 @@ export function* fetchCollectionsStart() {
         ShopActionTypes.FETCH_COLLECTIONS_START, 
         fetchCollectionsAsync
     );
+};
+
+export function* shopSagas() {
+    yield all([
+        call(fetchCollectionsStart)
+    ]);
 };

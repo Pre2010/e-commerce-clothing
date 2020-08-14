@@ -9,8 +9,6 @@ export const PreviewCollectionContainer = styled.div`
 export const TitleContainer = styled.h1`
     font-size: 28px;
     margin: 0 auto 25px;
-    background-color: white;
-    opacity: .9;
     cursor: pointer;
 
     &:hover {

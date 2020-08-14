@@ -8,10 +8,10 @@ export const ItemCollectionContainer = styled.div`
     height: 350px;
     align-items: center;
     position: relative;
-    
+
     &:hover {
         .image {
-            opacity: 0.8;
+        opacity: 0.8;
         }
 
         button {
@@ -40,13 +40,10 @@ export const CustomButtonContainer = styled(CustomButton)`
 
 export const CollectionFooterContainer = styled.div`
     width: 100%;
-    height: 7%;
+    height: 5%;
     display: flex;
     justify-content: space-between;
     font-size: 18px;
-    font-weight: bold;
-    background-color: white;
-    opacity: .9;
 `;
 
 export const NameContainer = styled.span`
