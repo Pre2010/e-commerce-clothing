@@ -9,3 +9,8 @@ export const SignUpContainer = styled.div`
 export const TitleContainer = styled.h2`
     margin: 10px 0;
 `;
+
+export const IncorrectPasswordContainer = styled.h3`
+    color: red;
+    font-weight: bold;
+`;

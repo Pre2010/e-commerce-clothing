@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {SignUpContainer, TitleContainer} from './signUp.styles.js';
+import {SignUpContainer, TitleContainer, IncorrectPasswordContainer} from './signUp.styles.js';
 import FormInput from '../form-input/form-input';
 import CustomButton from '../custom-button/custom-button';
 import {connect} from 'react-redux';
@@ -16,20 +16,24 @@ class SignUp extends Component {
             password: '',
             confirmPassword: ''
         }
-    }
+    };
+
+    incorrectPassword = false;
 
     handleOnSubmit = async event => {
         // prevents the form's default submit event
         event.preventDefault();
 
         const {signUpStart} = this.props;
-        const {displayName, email, password, confirmPassword} = this.state;
+        const {displayName, email, password} = this.state;
+        // const {displayName, email, password, confirmPassword} = this.state;
 
-        if (password !== confirmPassword) {
-            alert("Passwords don't match");
-            return;
-        }
-
+        
+        // if (password !== confirmPassword) {
+        //     alert("Passwords don't match");
+        //     return;
+        // };
+        
         signUpStart({displayName, email, password});
     };
 
@@ -37,10 +41,11 @@ class SignUp extends Component {
         const {name, value} = event.target;
 
         this.setState({[name]: value});
-    }
-    
+    };
+
     render() {
         const {displayName, email, password, confirmPassword} = this.state;
+        
         return (
             <SignUpContainer>
                 <TitleContainer>I do not have an account</TitleContainer>
@@ -78,7 +83,16 @@ class SignUp extends Component {
                         label='Confirm Password'
                         required/>
 
-                        <CustomButton type='submit'>SIGN UP</CustomButton>
+                        {
+                            // if our password and confirmPassword is not null AND are not equal to each other, show the IncorrectPasswordContainer and disable
+                            // the Custom Button, else don't show IncorrectPasswordContainer and enable the button
+                            ((password && confirmPassword) && (password !== confirmPassword)) ?
+                                <div>
+                                    <IncorrectPasswordContainer>Passwords dont' match. Please make sure the password is entered correctly and try again.</IncorrectPasswordContainer>
+                                    <CustomButton disabled type='submit'>SIGN UP</CustomButton>
+                                </div>
+                            : <CustomButton type='submit'>SIGN UP</CustomButton>
+                        }
                 </form>
             </SignUpContainer>
         )
