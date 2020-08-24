@@ -3,7 +3,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Stipe Secret API Key for Back End
 
 In the back-end folder, add a file called '.env' and have a variable called 'STRIPE_SECRET_KEY' and set it equal to your Secret API key from
-Stripe API site. You will need to make an account to get an API key.
+Stripe API site. You will need to make an account to get an API key. [https://stripe.com/]
 
 ## Available Scripts
 
