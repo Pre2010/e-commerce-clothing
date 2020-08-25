@@ -1,6 +1,5 @@
 import styled, {css} from 'styled-components';
 import {Link} from 'react-router-dom';
-import img from '../../assets/geo-flower.png';
 
 export const OptionContainerStyles = css`
         padding: 10px 15px;

@@ -12,6 +12,8 @@ const config = {
     appId: "1:545685435287:web:b6c749f4c61e31b63e8ad2"
 };
 
+firebase.initializeApp(config);
+
 // async await is similar to promise/.then .catch syntax
 export const createUserProfileDocument = async (userAuth, additionalData) => {
     if (!userAuth) return;
@@ -42,6 +44,9 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
     return userRef;
 };
+
+export const auth = firebase.auth();
+export const firestore = firebase.firestore();
 
 // automatically add data from our data files to Firestore.
 export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
@@ -94,11 +99,6 @@ export const getCurrentUser = () => {
         }, reject)
     })
 }
-
-firebase.initializeApp(config);
-
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
 
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
 // triggers the selection of Google account popup
