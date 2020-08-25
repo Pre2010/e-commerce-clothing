@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const compression = require('compression');
 
 // if we are not in a prod env, we will access our secret key inside of .env file
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
@@ -10,6 +11,9 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+// adds compression and gzipping to our server
+app.use(compression());
 
 // converts the body of the incoming requests into json
 app.use(bodyParser.json());
