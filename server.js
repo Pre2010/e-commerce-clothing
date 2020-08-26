@@ -13,9 +13,6 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
 const port = process.env.PORT || 5000;
 
-// adds compression and gzipping to our server
-app.use(compression());
-
 // converts the body of the incoming requests into json
 app.use(bodyParser.json());
 
@@ -25,6 +22,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
 if (process.env.NODE_ENV === 'production') {
+    // adds compression and gzipping to our server
+    app.use(compression());
     // forces prod environment to use HTTPS
     app.use(enforce.HTTPS({trustProtoHeader: true}));
     app.use(express.static(path.join(__dirname, 'client/build')));
