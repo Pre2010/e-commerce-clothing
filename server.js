@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const compression = require('compression');
+const enforce = require('express-sslify');
 
 // if we are not in a prod env, we will access our secret key inside of .env file
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
@@ -24,6 +25,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
 if (process.env.NODE_ENV === 'production') {
+    // forces prod environment to use HTTPS
+    app.use(enforce.HTTPS({trustProtoHeader: true}));
     app.use(express.static(path.join(__dirname, 'client/build')));
     // * means every url the user hits, we pass a function with a request and response.
     // the response will be to send static files
@@ -35,6 +38,11 @@ if (process.env.NODE_ENV === 'production') {
 app.listen(port, error => {
     if (error) throw error;
     console.log('Smooth sailing on port ', port);
+});
+
+// if our app makes a GET request to /service-worker.js, we point it to our service-worker.js file in the build folder
+app.get('/service-worker.js', (req, resp) => {
+    resp.sendFile(path.resolve(__dirname, '..', 'build', 'service-worker.js'));
 });
 
 // Stripe payment
